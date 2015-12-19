@@ -9,7 +9,6 @@ class m151219_092402_category_post extends Migration
     {
 
         $this->createTable('category_post', [
-            'id_category_post' => $this->primaryKey()->notNull(),
             'post_id' => $this->integer(11)->notNull(),
             'category_id' => $this->integer(11)->notNull(),
         ]);
