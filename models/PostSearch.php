@@ -10,14 +10,13 @@ namespace app\models;
 
 
 use Yii;
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Posts;
+use yii\helpers\ArrayHelper;
 
 /**
  * PostSearch represents the model behind the search form about `app\models\Posts`.
  */
-class PostSearch extends Model {
+class PostSearch extends Posts {
 
     /**
      * @inheritdoc
@@ -25,18 +24,8 @@ class PostSearch extends Model {
     public function rules()
     {
         return [
-            [['id_post', 'time'], 'integer'],
-            [['title', 'description'], 'safe'],
+            [['title', 'description', 'categor'], 'safe'],
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
     }
 
     /**
@@ -50,25 +39,25 @@ class PostSearch extends Model {
     {
         $query = Posts::find();
 
+        //$query->joinWith('categories');
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
+        $this->categor = $this->categories;
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id_post' => $this->id_post,
-            'time' => $this->time,
-        ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'description', $this->description]);
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'categories',
+                implode(' ', ArrayHelper::map($this->categories, 'id' ,'title'))
+            ]);
 
         return $dataProvider;
     }

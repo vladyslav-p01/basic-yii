@@ -18,19 +18,10 @@ class CategoriesSearch extends Categories
     public function rules()
     {
         return [
-            [['id_category'], 'integer'],
             [['title'], 'safe'],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
 
     /**
      * Creates data provider instance with search query applied
@@ -55,9 +46,6 @@ class CategoriesSearch extends Categories
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id_category' => $this->id_category,
-        ]);
 
         $query->andFilterWhere(['like', 'title', $this->title]);
 

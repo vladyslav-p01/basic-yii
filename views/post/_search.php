@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\CategoriesSearch */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $allCategories */
 ?>
 
 <div class="categories-search">
@@ -17,6 +18,8 @@ use yii\widgets\ActiveForm;
 
 
     <?= $form->field($model, 'title') ?>
+    <?= $form->field($model, 'description') ?>
+    <?= $form->field($model, 'categor')->dropDownList($allCategories) ?>
 
 
     <div class="form-group">

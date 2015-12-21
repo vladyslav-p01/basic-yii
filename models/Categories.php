@@ -9,8 +9,6 @@ use Yii;
  *
  * @property integer $id_category
  * @property string $title
- *
- * @property CategoryPost[] $categoryPosts
  */
 class Categories extends \yii\db\ActiveRecord
 {

@@ -9,6 +9,7 @@
 namespace app\controllers;
 
 use app\models\Categories;
+use app\models\CategoriesSearch;
 use app\models\Posts;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -81,27 +82,18 @@ class PostController extends Controller {
 
     public function actionIndex()
     {
-        /*
-                $searchModel = new PostSearch();
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-                return $this->render('show-all', [
-                /*'searchModel' => $searchModel,*/
-        /* 'dataProvider' => $dataProvider,
-         ]);*/
+        $searchModel = new PostSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-
-
-        $posts = Posts::find();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $posts,
-            'pagination' => [
-                'pageSize' => 5,
-            ],
+        $allCategories = Categories::find()->all();
+        $allCategories = ArrayHelper::map($allCategories, 'id_category', 'title');
+        return $this->render(
+            'index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'categories' => $allCategories
         ]);
-
-        return $this->render('index', ['dataProvider' => $dataProvider]);
-
 
     }
 
