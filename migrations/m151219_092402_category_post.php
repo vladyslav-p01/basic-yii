@@ -8,10 +8,11 @@ class m151219_092402_category_post extends Migration
     public function up()
     {
 
+        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         $this->createTable('category_post', [
             'post_id' => $this->integer(11)->notNull(),
             'category_id' => $this->integer(11)->notNull(),
-        ]);
+        ], $tableOptions);
 
         //addForeignKey($name, $table, $columns, $refTable, $refColumns
         $this->addForeignKey('fk-category-post-post_id',
