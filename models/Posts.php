@@ -12,8 +12,6 @@ use app\models\Categories;
  * @property string $title
  * @property string $description
  * @property integer $time
- *
- * @property CategoryPost[] $categoryPosts
  */
 class Posts extends \yii\db\ActiveRecord
 {
@@ -51,6 +49,7 @@ class Posts extends \yii\db\ActiveRecord
             'title' => 'Title',
             'description' => 'Description',
             'time' => 'Time',
+            'categor' => 'Categories'
         ];
     }
 

@@ -10,14 +10,22 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
+
+/**
+ * @var $searchModel
+ * @var $categories
+ */
 ?>
 
-<?= GridView::widget(['dataProvider' => $dataProvider,
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
     'columns' => [
         ['class' => '\yii\grid\SerialColumn'],
         'title',
         [
-            'label' => 'Категория',
+            'attribute' => 'categor',
+            'filter' => $categories,
             'format' => 'html',
             'value' => function($data) {
                 $array = [];
@@ -30,7 +38,7 @@ use yii\helpers\Url;
         ],
         [
 
-            'attribute' => 'Действиe',
+            'attribute' => 'Action',
             'format' => 'html',
             'value' => function ($data) {
                 $string = Html::tag('a',

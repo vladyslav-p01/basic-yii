@@ -9,8 +9,6 @@ use Yii;
  *
  * @property integer $id_category
  * @property string $title
- *
- * @property CategoryPost[] $categoryPosts
  */
 class Categories extends \yii\db\ActiveRecord
 {
@@ -47,11 +45,23 @@ class Categories extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+
+
     /*
-    public function getCategoryPosts()
+     * //return $this->hasMany(Item::className(), ['id' => 'item_id'])
+        //->viaTable('order_item', ['order_id' => 'id']);
+     */
+
+    /**
+     * @return \yii\db\ActiveQuery
+     * return $this->hasMany(Categories::className(),
+    ['id_category' => 'category_id'])->viaTable('category_post', ['post_id' => 'id_post']);
+     */
+    public function getPosts()
     {
-        return $this->hasMany(CategoryPost::className(), ['category_id' => 'id_category']);
+        return $this->hasMany(Posts::className(), ['id_post' => 'post_id'])
+            ->viaTable('category_post', ['category_id' => 'id_category']);
     }
 
-    */
+
 }
