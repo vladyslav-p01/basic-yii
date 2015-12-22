@@ -18,16 +18,6 @@ class m151220_172957_comments extends Migration
                 ],
             $tableOptions
             );
-        $this->addColumn('posts','comments_id',$this->integer());
-        //addForeignKey($name, $table, $columns, $refTable, $refColumns
-        $this->addForeignKey(
-            'FK-posts-comments_id',
-            'posts',
-            'comments_id',
-            'comments',
-            'id_comment',
-            'CASCADE'
-        );
     }
 
     public function down()
