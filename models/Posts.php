@@ -59,8 +59,6 @@ class Posts extends \yii\db\ActiveRecord
      */
     public function getCategories()
     {
-        //return $this->hasMany(Item::className(), ['id' => 'item_id'])
-        //->viaTable('order_item', ['order_id' => 'id']);
         return $this->hasMany(Categories::className(),
             ['id_category' => 'category_id'])->viaTable('category_post', ['post_id' => 'id_post']);
     }

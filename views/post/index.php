@@ -30,7 +30,7 @@ use yii\helpers\Url;
         ],
         [
 
-            'label' => 'Действиe',
+            'attribute' => 'Действиe',
             'format' => 'html',
             'value' => function ($data) {
                 $string = Html::tag('a',
