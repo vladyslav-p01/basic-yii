@@ -13,17 +13,19 @@ use yii\helpers\Url;
 
 /**
  * @var $searchModel
+ * @var $categories
  */
 ?>
 
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
-    /*'filterModel' => $searchModel,*/
+    'filterModel' => $searchModel,
     'columns' => [
         ['class' => '\yii\grid\SerialColumn'],
         'title',
         [
-            'label' => 'Категория',
+            'attribute' => 'categor',
+            'filter' => $categories,
             'format' => 'html',
             'value' => function($data) {
                 $array = [];
@@ -35,7 +37,7 @@ use yii\helpers\Url;
             }
         ],
         [
-            'label' => 'Действиe',
+            'attribute' => 'Action',
             'format' => 'html',
             'value' => function ($data) {
                 $string = Html::tag('a',

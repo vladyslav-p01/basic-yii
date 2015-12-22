@@ -14,7 +14,7 @@ use yii\filters\VerbFilter;
  */
 class CategoryController extends Controller
 {
-    public function behaviors()
+   /* public function behaviors()
     {
         return [
             'verbs' => [
@@ -25,7 +25,7 @@ class CategoryController extends Controller
             ],
         ];
     }
-
+*/
     /**
      * Lists all Categories models.
      * @return mixed
@@ -98,8 +98,14 @@ class CategoryController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        /* @var Categories $category*/
+        $category = $this->findModel($id);
+        if (count($category->posts) != 0) {
+            return $this->render('../post/error',
+                ['message' =>
+                    'В этой категории есть посты, пожалуйста удалите сначала посты']);
+        }
+        $category->delete();
         return $this->redirect(['index']);
     }
 

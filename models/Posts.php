@@ -49,6 +49,7 @@ class Posts extends \yii\db\ActiveRecord
             'title' => 'Title',
             'description' => 'Description',
             'time' => 'Time',
+            'categor' => 'Categories'
         ];
     }
 

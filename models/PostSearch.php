@@ -52,12 +52,13 @@ class PostSearch extends Posts {
             return $dataProvider;
         }
 
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'categories',
-                implode(' ', ArrayHelper::map($this->categories, 'id' ,'title'))
-            ]);
+        if ($this->categor !== '') {
+            $query->joinWith('categories');
+            $query->andFilterWhere(['like', 'description', $this->description])
+                ->andFilterWhere(['id_category' => $this->categor]);
+        }
 
         return $dataProvider;
     }
