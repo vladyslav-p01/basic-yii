@@ -41,6 +41,8 @@ class m151226_204939_add_owner extends Migration
     {
         $this->dropForeignKey('FK-posts-author_id', 'posts');
         $this->dropForeignKey('FK-comments-author_id', 'comments');
+        $this->dropColumn('posts', 'author_id');
+        $this->dropColumn('comments', 'author_id');
         $this->dropTable('users');
     }
 
