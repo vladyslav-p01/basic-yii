@@ -39,7 +39,7 @@ class PostSearch extends Posts {
     {
         $query = Posts::find();
 
-        //$query->joinWith('categories');
+        $query->joinWith('categories');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,13 +52,9 @@ class PostSearch extends Posts {
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'title', $this->title]);
-
-        if ($this->categor !== '') {
-            $query->joinWith('categories');
-            $query->andFilterWhere(['like', 'description', $this->description])
-                ->andFilterWhere(['id_category' => $this->categor]);
-        }
+        $query->andFilterWhere(['like', 'posts.title', $this->title])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['id_category' => $this->categor]);
 
         return $dataProvider;
     }

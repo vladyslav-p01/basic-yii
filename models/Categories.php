@@ -60,7 +60,7 @@ class Categories extends \yii\db\ActiveRecord
     public function getPosts()
     {
         return $this->hasMany(Posts::className(), ['id_post' => 'post_id'])
-            ->viaTable('category_post', ['category_id' => 'id_category']);
+            ->viaTable('category_post', ['category,,k_id' => 'id_category']);
     }
 
 
