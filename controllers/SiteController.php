@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\RegistrationForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -17,13 +19,23 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'login', 'registration'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['registration'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ]
                 ],
             ],
             'verbs' => [
@@ -93,12 +105,20 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionTest()
+    public function actionRegistration()
     {
+        $model = new RegistrationForm();
 
-        $posts = Posts::find()->one();
-        print_r($posts->categories);
-        //return $this->render('about');
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post()) &&
+                $model->register()
+            ) {
+                return $this->render('register-success',
+                ['model' => $model]);
+            }
+        }
+        return $this->render('register', ['model' => $model]);
     }
+
 
 }

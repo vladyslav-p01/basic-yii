@@ -11,8 +11,8 @@ class m151226_204939_add_owner extends Migration
 
         $this->createTable('users', [
            'id_user' => $this->primaryKey(),
-           'login' => $this->string()->notNull(),
-            'password_hash' => $this->string(30)->notNull(),
+           'username' => $this->string()->notNull(),
+            'password_hash' => $this->string()->notNull(),
             'auth_key' => $this->string()
         ], $tableOptions);
 
