@@ -12,6 +12,9 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Posts;
 
+use yii\base\InvalidConfigException;
+use yii\rbac\DbManager;
+
 class SiteController extends Controller
 {
     public function behaviors()
@@ -78,6 +81,7 @@ class SiteController extends Controller
         return $this->render('login', [
             'model' => $model,
         ]);
+
     }
 
     public function actionLogout()

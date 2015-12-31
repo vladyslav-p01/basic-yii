@@ -13,6 +13,7 @@ use app\models\CategoriesSearch;
 use app\models\Posts;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -21,29 +22,86 @@ use app\models\PostSearch;
 
 class PostController extends Controller {
 
+    /*
+     * public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['logout', 'login', 'registration'],
+                'rules' => [
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['registration'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+     * */
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => [ 'create'],
+                'rules' => [
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+
+                ],
+            ],
+        ];
+    }
+
     public function actionCreate()
     {
 
-        $post = new Posts();
+        //if (\Yii::$app->user->can('createPost')) {
+            // create post
+            $post = new Posts();
 
-        if (Yii::$app->request->isPost) {
-            if ($post->load(Yii::$app->request->post())) {
-                $post->time = time();
-                $post->validate();
-                $post->save();
+            if (Yii::$app->request->isPost) {
+                if ($post->load(Yii::$app->request->post())) {
+                    $post->time = time();
+                    $post->validate();
+                    $post->save();
 
-                foreach ($post->categor as $element) {
-                    $category = Categories::findOne($element);
-                    $post->link('categories', $category);
+                    foreach ($post->categor as $element) {
+                        $category = Categories::findOne($element);
+                        $post->link('categories', $category);
+                    }
+                    return $this->redirect(['index']);
                 }
-                return $this->redirect(['index']);
             }
-        }
 
-        $categories = Categories::find()->all();
-        return $this->render('new-post', ['model' => $post,
-            'categories' =>
-                ArrayHelper::map($categories, 'id_category', 'category->title')]);
+            $categories = Categories::find()->all();
+            return $this->render('new-post', ['model' => $post,
+                'categories' =>
+                    ArrayHelper::map($categories, 'id_category', 'title')]);
+        //}
+        //throw new NotFoundHttpException('You have not permission to perform this action');
     }
 
     public function actionEdit()//Update
