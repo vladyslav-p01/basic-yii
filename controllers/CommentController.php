@@ -60,6 +60,11 @@ class CommentController extends Controller
      */
     public function actionCreate()
     {
+        if(!Yii::$app->user->can('createComment')) {
+            throw new NotFoundHttpException('You have not permission to perform this action');
+
+        }
+
         $model = new Comments();
 
         if (Yii::$app->request->isPost &&

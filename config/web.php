@@ -22,7 +22,7 @@ $config = [
 
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            //'defaultRoles' => ['author'],
+            'defaultRoles' => ['author'],
         ],
 
         'errorHandler' => [

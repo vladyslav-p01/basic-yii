@@ -22,41 +22,6 @@ use app\models\PostSearch;
 
 class PostController extends Controller {
 
-    /*
-     * public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'login', 'registration'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['login'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['registration'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ]
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-     * */
-
     public function behaviors()
     {
         return [
@@ -67,7 +32,7 @@ class PostController extends Controller {
                     [
                         'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['admin']
+                        'roles' => ['author']
                     ],
 
                 ],
@@ -78,13 +43,16 @@ class PostController extends Controller {
     public function actionCreate()
     {
 
-        //if (\Yii::$app->user->can('createPost')) {
+        if (!Yii::$app->user->can('createPost')) {
+            throw new NotFoundHttpException('You have not permission to perform this action');
+        }
             // create post
             $post = new Posts();
 
             if (Yii::$app->request->isPost) {
                 if ($post->load(Yii::$app->request->post())) {
                     $post->time = time();
+                    $post->author_id = Yii::$app->user->getId();
                     $post->validate();
                     $post->save();
 
@@ -100,9 +68,9 @@ class PostController extends Controller {
             return $this->render('new-post', ['model' => $post,
                 'categories' =>
                     ArrayHelper::map($categories, 'id_category', 'title')]);
-        //}
-        //throw new NotFoundHttpException('You have not permission to perform this action');
-    }
+        }
+
+
 
     public function actionEdit()//Update
     {
@@ -110,8 +78,15 @@ class PostController extends Controller {
         $post = Posts::findOne(Yii::$app->request->get('id'));
 
         if (!$post) {
-            return "Not found";
+            throw new NotFoundHttpException('Post not founded');
         }
+
+        if (!Yii::$app->user->can('UpdatePost', ['post' => $post])) {
+            throw new NotFoundHttpException('You have not permission to perform this action');
+        }
+
+
+
         if ($post->load(Yii::$app->request->post()) &&
             $post->validate()
     ) {
