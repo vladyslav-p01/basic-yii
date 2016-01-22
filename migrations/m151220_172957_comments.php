@@ -15,15 +15,25 @@ class m151220_172957_comments extends Migration
                     'body' => $this->text(),
                     'time' => $this->integer(),
                     'post_id' => $this->integer(),
+                    'author_id' => $this->integer(),
                 ],
             $tableOptions
             );
+
+        $this->addForeignKey(
+            'FK-comments-author_id',
+            'comments',
+            'author_id',
+            'users',
+            'id_user'
+        );
+
     }
 
     public function down()
     {
-        $this->dropForeignKey('FK-posts-comments_id', 'posts');
-        $this->dropColumn('posts','comments_id');
+        $this->dropForeignKey('FK-comments-author_id', 'comments');
+
         $this->dropTable('comments');
     }
 

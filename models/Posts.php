@@ -12,6 +12,7 @@ use app\models\Categories;
  * @property string $title
  * @property string $description
  * @property integer $time
+ * @property integer $author_id
  */
 class Posts extends \yii\db\ActiveRecord
 {
@@ -36,6 +37,7 @@ class Posts extends \yii\db\ActiveRecord
             [['time'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['categor'], 'required'],
+            ['author_id', 'required']
         ];
     }
 
@@ -65,5 +67,10 @@ class Posts extends \yii\db\ActiveRecord
     public function getComments()
     {
         return $this->hasMany(Comments::className(), ['post_id' => 'id_post']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id_user' => 'author_id']);
     }
 }

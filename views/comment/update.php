@@ -5,10 +5,11 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Comments */
 
-$this->title = 'Update Comments: ' . ' ' . $model->id_comment;
-$this->params['breadcrumbs'][] = ['label' => 'Comments', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id_comment, 'url' => ['view', 'id' => $model->id_comment]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Update Comment: ' . ' ' . $model->id_comment;
+$this->params['breadcrumbs'][] = [
+    'label' => $model->post->title,
+    'url' => ['post/view', 'id' => $model->post_id]];
+$this->params['breadcrumbs'][] = 'Update comment';
 ?>
 <div class="comments-update">
 

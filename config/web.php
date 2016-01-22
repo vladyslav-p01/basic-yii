@@ -14,13 +14,31 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['author'],
+        ],
+
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+
+        'urlManager' => [
+            'showScriptName' => false,
+            'enablePrettyUrl' => true,
+            /*'rules' => [
+                '<controller:\w+>' => '<controller>/index',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+            ],*/
+        ],
+
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set
@@ -40,6 +58,8 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
+
+
 ];
 
 if (YII_ENV_DEV) {
