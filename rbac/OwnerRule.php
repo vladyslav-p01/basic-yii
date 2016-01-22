@@ -10,9 +10,9 @@ namespace app\rbac;
 
 use yii\rbac\Rule;
 
-class AuthorRule extends Rule {
+class OwnerRule extends Rule {
 
-    public $name = 'isAuthor';
+    public $name = 'isOwner';
 
     /**
      * @param int|string $user
@@ -22,6 +22,6 @@ class AuthorRule extends Rule {
      */
     public function execute($user, $item, $params)
     {
-        return isset($params['post']) ? $params['post']->author_id == $user : false;
+        return isset($params['object']) ? $params['object']->author_id == $user : false;
     }
 }

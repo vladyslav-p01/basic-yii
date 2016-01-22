@@ -9,15 +9,15 @@
 namespace app\controllers;
 
 use app\models\Categories;
-use app\models\CategoriesSearch;
 use app\models\Posts;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use app\models\PostSearch;
+use app\components\ConfirmAccess;
 
 
 class PostController extends Controller {
@@ -27,62 +27,62 @@ class PostController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => [ 'create'],
                 'rules' => [
                     [
-                        'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['author']
+                        'roles' => ['@']
                     ],
 
                 ],
             ],
+
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post']
+                ],
+            ]
         ];
     }
 
     public function actionCreate()
     {
 
-        if (!Yii::$app->user->can('createPost')) {
-            throw new NotFoundHttpException('You have not permission to perform this action');
-        }
-            // create post
-            $post = new Posts();
+        ConfirmAccess::check('createPost');
+        $post = new Posts();
 
-            if (Yii::$app->request->isPost) {
-                if ($post->load(Yii::$app->request->post())) {
-                    $post->time = time();
-                    $post->author_id = Yii::$app->user->getId();
-                    $post->validate();
-                    $post->save();
+        if (Yii::$app->request->isPost) {
+            if ($post->load(Yii::$app->request->post())) {
+                $post->time = time();
+                $post->author_id = Yii::$app->user->getId();
+                $post->validate();
+                $post->save();
 
-                    foreach ($post->categor as $element) {
-                        $category = Categories::findOne($element);
-                        $post->link('categories', $category);
-                    }
-                    return $this->redirect(['index']);
+                foreach ($post->categor as $element) {
+                    $category = Categories::findOne($element);
+                    $post->link('categories', $category);
                 }
+                return $this->redirect(['index']);
             }
-
-            $categories = Categories::find()->all();
-            return $this->render('new-post', ['model' => $post,
-                'categories' =>
-                    ArrayHelper::map($categories, 'id_category', 'title')]);
         }
 
+        $categories = Categories::find()->all();
+        return $this->render('new-post', ['model' => $post,
+            'categories' =>
+                ArrayHelper::map($categories, 'id_category', 'title')]);
+    }
 
 
-    public function actionEdit()//Update
+
+    public function actionUpdate()
     {
-        /** @var Posts $post */
         $post = Posts::findOne(Yii::$app->request->get('id'));
+
+        ConfirmAccess::check('updatePost', ['object' => $post]);
+        /** @var Posts $post */
 
         if (!$post) {
             throw new NotFoundHttpException('Post not founded');
-        }
-
-        if (!Yii::$app->user->can('UpdatePost', ['post' => $post])) {
-            throw new NotFoundHttpException('You have not permission to perform this action');
         }
 
 
@@ -98,7 +98,7 @@ class PostController extends Controller {
                 $category = Categories::findOne($element);
                 $post->link('categories', $category);
             }
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $post->id_post]);
 
         }
 
@@ -143,23 +143,17 @@ class PostController extends Controller {
         }
     }
 
-    public function actionDelete()
+    public function actionDelete($id)
     {
         /* @var Posts $post*/
-        if ($id = Yii::$app->request->get('confirm')) {
-            $post = Posts::findOne($id);
-            $post->unlinkAll('categories', true);
-            $post->unlinkAll('comments', true);
-            $post->delete();
-            return $this->redirect(['index']);
+        $post = $this->findModel($id);
+        ConfirmAccess::check('deletePost', ['object' => $post]);
 
-        }
+        $post->unlinkAll('categories', true);
+        $post->unlinkAll('comments', true);
+        $post->delete();
+        return $this->redirect(['index']);
 
-        $post = Posts::findOne(Yii::$app->request->get('id'));
-        if ($post) {
-            return $this->render('confirm', ['postTitle' => $post->title, 'id' => $post->id_post]);
-        }
-        return $this->render('error', ['message' => 'Такого поста нет']);
     }
 
     public function actionView()

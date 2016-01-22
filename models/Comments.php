@@ -31,7 +31,7 @@ class Comments extends \yii\db\ActiveRecord
     {
         return [
             [['body'], 'string'],
-            [['time', 'post_id'], 'integer']
+            [['post_id'], 'integer']
         ];
     }
 
@@ -54,5 +54,15 @@ class Comments extends \yii\db\ActiveRecord
     public function getPost()
     {
         return $this->hasOne(Posts::className(), ['id_post' => 'post_id']);
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->time = time();
+        if ($this->isNewRecord) {
+            $this->author_id = Yii::$app->user->getId();
+        }
+
+        return parent::beforeSave($insert);
     }
 }

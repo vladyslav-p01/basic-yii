@@ -54,12 +54,13 @@ class RegistrationForm extends Model
             $user = new User();
 
             $user->username = $this->username;
-            //$user->password_hash = Yii::$app->security
-                //->generatePasswordHash($this->password);
-            $user->password_hash = password_hash($this->password, 1);
+            $user->password_hash = Yii::$app->security->generatePasswordHash($this->password);
             $user->auth_key = Yii::$app->security->generateRandomString();
 
             if ($user->save()) {
+                $auth = Yii::$app->authManager;
+                $author = $auth->getRole('author');
+                $auth->assign($author, $user->id_user);
                 return true;
             }
             else echo 'Unsaved';

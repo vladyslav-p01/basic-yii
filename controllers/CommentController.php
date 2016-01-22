@@ -5,9 +5,12 @@ namespace app\controllers;
 use Yii;
 use app\models\Comments;
 use yii\data\ActiveDataProvider;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\components\ConfirmAccess;
 
 /**
  * CommentController implements the CRUD actions for Comments model.
@@ -17,6 +20,16 @@ class CommentController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
+
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -58,32 +71,19 @@ class CommentController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)//id post
     {
-        if(!Yii::$app->user->can('createComment')) {
-            throw new NotFoundHttpException('You have not permission to perform this action');
-
-        }
-
+        ConfirmAccess::check('createComment');
         $model = new Comments();
 
-        if (Yii::$app->request->isPost &&
-            $model->load(Yii::$app->request->post())
-        ) {
-            $model->time = time();
-            $model->save();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['post/view', 'id' => $model->post_id]);
         }
 
-        if ($id = Yii::$app->request->get('id')) {
-            return $this->render('create', [
-                'model' => $model,
-                'id' => $id
-            ]);
-        }
-
-        return $this->redirect(['post/index']);
-
+        $model->post_id = $id;
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -95,9 +95,10 @@ class CommentController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        ConfirmAccess::check('updateComment', ['object' => $model]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_comment]);
+            return $this->redirect(['post/view', 'id' => $model->post_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -113,9 +114,12 @@ class CommentController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        ConfirmAccess::check('updateComment', ['object' => $model]);
+        $post_id = $model->post_id;
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['post/view', 'id' => $model->post_id]);
     }
 
     /**
