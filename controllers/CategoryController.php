@@ -2,21 +2,33 @@
 
 namespace app\controllers;
 
+use app\components\ConfirmAccess;
 use Yii;
 use app\models\Categories;
 use app\models\CategoriesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CategoryController implements the CRUD actions for Categories model.
  */
 class CategoryController extends Controller
 {
-   /* public function behaviors()
+    public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
+
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -25,7 +37,7 @@ class CategoryController extends Controller
             ],
         ];
     }
-*/
+
     /**
      * Lists all Categories models.
      * @return mixed
@@ -60,6 +72,7 @@ class CategoryController extends Controller
      */
     public function actionCreate()
     {
+        ConfirmAccess::check('createCategory');
         $model = new Categories();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -80,6 +93,7 @@ class CategoryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        ConfirmAccess::check('createCategory', ['object' => $model]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_category]);
@@ -100,6 +114,8 @@ class CategoryController extends Controller
     {
         /* @var Categories $category*/
         $category = $this->findModel($id);
+        ConfirmAccess::check('deleteCategory', ['object' => $category]);
+
         if (count($category->posts) != 0) {
             return $this->render('../post/error',
                 ['message' =>

@@ -1,0 +1,1 @@
+Default users: admin:admin, author:author;

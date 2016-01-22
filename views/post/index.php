@@ -17,6 +17,8 @@ use yii\helpers\Url;
  */
 ?>
 
+
+
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
@@ -51,7 +53,7 @@ use yii\helpers\Url;
                 $string .= Html::tag('a',
                     'Редактировать',
                     [
-                        'href' => Url::to(['post/edit', 'id'
+                        'href' => Url::to(['post/update', 'id'
                         => $data->id_post])
                     ]);
                 $string .= '&nbsp';
@@ -60,7 +62,14 @@ use yii\helpers\Url;
                     [
                         'href' => Url::to(['post/delete', 'id'
                         => $data->id_post])
-                    ]);
+                    ],
+                    [
+                        'data' => [
+                            'confirm' => 'Are you really want to delete this post?',
+                            'method' => 'post',
+                        ]
+                    ]
+                    );
                 return $string;
             }
 
@@ -68,5 +77,5 @@ use yii\helpers\Url;
     ]
 
 ]) ?>
-<a href="<?= Url::to(['create']) ?>">Создать пост</a>
-<a href="<?= Url::to(['category/entry']) ?>">Создать категорию</a>
+<?= Html::a('Create post', ['create'], ['class' => 'btn btn-success']) ?>
+&nbsp;

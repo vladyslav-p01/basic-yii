@@ -14,10 +14,14 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'body')->textarea(['rows' => 6]) ?>
-    <?= $form->field($model, 'post_id')->hiddenInput(['value' => $id])->label(false) ?>
+    <?= $form->field($model, 'post_id')->hiddenInput(['value' => $model->post_id])->label(false) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Create', ['class' => 'btn btn-primary']) ?>
+        <?php if ($model->isNewRecord): ?>
+            <?= Html::submitButton('Create', ['class' => 'btn btn-primary']) ?>
+        <?php else: ?>
+            <?= Html::submitButton('Update', ['class' => 'btn btn-success']) ?>
+        <?php endif ?>
     </div>
 
     <?php ActiveForm::end(); ?>

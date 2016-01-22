@@ -63,5 +63,10 @@ class Categories extends \yii\db\ActiveRecord
             ->viaTable('category_post', ['category,,k_id' => 'id_category']);
     }
 
+    public function getAuthor()
+    {
+        return $this->hasOne(User::className(), ['id_user' => 'author_id']);
+    }
+
 
 }

@@ -37,6 +37,7 @@ class Posts extends \yii\db\ActiveRecord
             [['time'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['categor'], 'required'],
+            ['author_id', 'required']
         ];
     }
 

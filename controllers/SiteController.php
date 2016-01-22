@@ -12,6 +12,9 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Posts;
 
+use yii\base\InvalidConfigException;
+use yii\rbac\DbManager;
+
 class SiteController extends Controller
 {
     public function behaviors()
@@ -27,15 +30,10 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['login'],
+                        'actions' => ['login', 'registration'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
-                    [
-                        'actions' => ['registration'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ]
                 ],
             ],
             'verbs' => [
@@ -78,6 +76,7 @@ class SiteController extends Controller
         return $this->render('login', [
             'model' => $model,
         ]);
+
     }
 
     public function actionLogout()
