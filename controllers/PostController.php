@@ -41,12 +41,9 @@ class PostController extends Controller {
         }
 
         $categories = Categories::find()->all();
-        $array = [];
-        foreach ($categories as $category) {
-            $array[$category->id_category] = $category->title;
-        }
         return $this->render('new-post', ['model' => $post,
-            'categories' => $array]);
+            'categories' =>
+                ArrayHelper::map($categories, 'id_category', 'category->title')]);
     }
 
     public function actionEdit()//Update
